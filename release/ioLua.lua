@@ -1148,7 +1148,7 @@ M.str = function(t, indent)
       local k = head(keys)
       local v = ""
       if type(dict[k]) == "table" then
-        v = aux(dict[k], (get_keys(dict[k])), { }, indent)
+        v = aux(dict[k], (get_keys(dict[k])), { }, prefix .. indent)
       else
         v = quote(dict[k])
       end
@@ -1265,6 +1265,11 @@ package.preload[ "appIoLua._text._readall" ] = function( ... ) local arg = _G.ar
 local M = { }
 M.readall = function(f_input)
   local IN = io.open(f_input, "r")
+  if IN == nil then
+    io.close(IN)
+    print(string.format("ERROR HINT: cannot open file %s (maybe it doesn't exist)", f_input))
+    return ""
+  end
   io.input(IN)
   local content = io.read("*all")
   io.close(IN)
